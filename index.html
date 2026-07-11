@@ -771,18 +771,50 @@
 
     function genFallback() {
       const fb = [
-        { title:'GTA VI: تسريبات جديدة تكشف عن تفاصيل مذهلة', desc:'مصادر مقربة تؤكد أن Rockstar تستعد لإطلاق GTA VI مع عالم مفتوح غير مسبوق.', cat:'leak', source:'Insider Gaming' },
-        { title:'PS5 Pro: اختبارات الأداء تتخطى التوقعات', desc:'تحسينات كبيرة في ray tracing ومعالج رسومات جديد يغير قواعد اللعبة.', cat:'official', source:'Digital Foundry' },
-        { title:'Call of Duty 2026: خرائط وتحديثات حصرية', desc:'Activision تكشف عن خطط ضخمة مع خرائط جديدة ووضع لعب مبتكر.', cat:'official', source:'IGN' },
-        { title:'Fortnite Season 12: تعاون ضخم', desc:'Epic Games تعلن عن أكبر تعاون في تاريخ Fortnite مع حفل حي.', cat:'official', source:'Epic Games' },
-        { title:'PS Plus: ألعاب الشهر القادم تتسرب', desc:'قائمة ألعاب AAA حصرية تتضمن 3 عناوين ضخمة حسب التسريبات.', cat:'leak', source:'Game Informer' },
-        { title:'Switch 2: المواصفات النهائية', desc:'تفاصيل عن معالج وذاكرة شاشة Nintendo Switch 2 قبل الإعلان.', cat:'leak', source:'VGC' },
-        { title:'Elden Ring: توسيع جديد', desc:'Bandai Namco تلمح لإضافة محتوى جديد بعد نجاح Shadow of the Erdtree.', cat:'rumor', source:'GameSpot' },
-        { title:'Minecraft Update 1.22', desc:'Mojang تكشف عن أكبر تحديث مع عالم جديد وأدوات بناء متقدمة.', cat:'update', source:'Minecraft' },
-        { title:'Steam Summer Sale 2026', desc:'أقوى الخصومات على Steam مع عروض تصل إلى 90%.', cat:'official', source:'Steam' },
-        { title:'Witcher 4: أولى لقطات اللعبة', desc:'لقطات جديدة تظهر رسوميات مذهلة ونظام قتال محسّن.', cat:'leak', source:'Insider Gaming' },
-        { title:'Xbox Game Pass: 5 ألعاب جديدة', desc:'Microsoft تضيف 5 عناوين AAA جديدة لخدمة Game Pass.', cat:'update', source:'Xbox Wire' },
-        { title:'Cyberpunk: مشروع جديد في الطريق', desc:'CD Projekt Red تلمح لمشروع جديد في عالم Cyberpunk.', cat:'rumor', source:'Bloomberg' }
+        // GTA VI - تسريبات
+        { title:'GTA VI: المحرك الجديد يحاكي الطقس والفيزياء بواقعية مرعبة', desc:'محرك RAGE 9 الخاص بـ Rockstar يستخدم ray tracing مسار كامل مع انعكاسات حقيقية للماء والأمطار. خرائط ليونيدا تبلغ 2.5 أضعاف خريطة GTA V مع تفاصيل داخلية لكل مبنى.', cat:'leak', source:'Insider Gaming' },
+        { title:'GTA VI: أول 30 دقيقة من اللعب تسرّبت — العالم مفتوح بشكل كامل من البداية', desc:'لقطات مسربة تظهر بطلة اللعبة "لوسيا" وهي تستقل سيارة عبر محيط ليونيدا عند الغروب. الأضواء انعكست على الطلاء بشكل واقعي 100%. Rockstar غضبت من التسريب.', cat:'leak', source:'VGC' },
+        { title:'GTA VI: تفاصيل نظام الوظائف — يمكن أن تعمل سائق تاكسي أو محامٍ أو مهرج', desc:'مصادر تؤكد وجود أكثر من 40 وظيفة مختلفة في اللعبة. بعضها يفتح قصصاً جانبية حصرية. الوظائف تتطور مع الوقت وتأثر على سمعتك في المدينة.', cat:'rumor', source:'Insider Gaming' },
+        { title:'Rockstar تؤكد: GTA VI ستكون آخر لعبة في سلسلة GTA', desc:'مصادر内部 تدّعي أن Rockstar ستغيّر اسم السلسلة بعد GTA VI. الشركة تخطط لعالم مفتوح جديد تماماً بمحرك مختلف تماماً.', cat:'rumor', source:'Bloomberg' },
+
+        // أخبار صادمة وحزينة
+        { title:'.poignant: استوديو Unity يُغلق أبوابه — 1200 موظف ي فقدون وظائفهم', desc:'شركة Unity أعلنت عن إغلاق 5 استوديوهات في أوروبا وأمريكا الشمالية. الموظفين علموا بالقرار عبر إيميل. صناعة الألعاب تعيش أزمة توظيف حقيقية.', cat:'official', source:'Game Developer' },
+        { title:'Blizzard تلغي مشروع Overwatch 3 بعد فشل Overwatch 2', desc:'بعد خسارة 40% من لاعبي Overwatch 2، Blizzard قررت إلغاء الجزء الثالث بالكامل. الفريق عمل على المشروع لمدة سنتين قبل الإلغاء.', cat:'official', source:'Kotaku' },
+        { title:' EA تُغلق استوديو Motive — المطورون وراء Dead Space Remake بلا عمل', desc:'استوديو Motive الذي أعاد صياغة Dead Space بإتقان أُغلق فجأة. المطورون وصفوا الموقف بـ"المروّع". EA ركّزت على ألعاب الرياضة فقط.', cat:'official', source:'IGN' },
+        { title:'أنهيار سوق الألعاب Independent — 50 استوديو صغير أُغلق هذا الشهر', desc:'أزمة اقتصادية تضرب الاستوديوهات المستقلة. تكلفة التسويق تجاوزت تكلفة التطوير. MANY مطورين ينتقلون لمنصات أخرى.', cat:'official', source:'Game Developer' },
+
+        // أخبار مبيعات وأرقام قياسية
+        { title:'GTA V تجاوزت 220 مليون نسخة — أعلى لعبة مبيعاً في التاريخ', desc:'Rockstar أعلنت أن GTA V تجاوزت 220 مليون نسخة مبيعاً. اللعبة صدرت في 2013 ولا تزال تُباع بأرقام خيالية. GTA VI متوقعة تكسر هذا الرقم.', cat:'official', source:'Rockstar Games' },
+        { title:'PlayStation 5 تجاوزت 80 مليون وحدة — Sony تحقق أرباحاً قياسية', desc:'Sony أعلنت أن PS5 باعت أكثر من 80 مليون وحدة. أرباح قسم الألعاب وصلت 8.5 مليار دولار هذا الربع. God of War Ragnarok باعت 15 مليون نسخة.', cat:'official', source:'Sony Interactive' },
+        { title:'Elden Ring: Shadow of the Erdtree يكسر أرقام DLC — 25 مليون نسخة', desc:'توسيع Elden Ring باع 25 مليون نسخة في أول أسبوع. This DLC أصبح أكبر محتوى إضافي مبيعاً في تاريخ الألعاب. Bandai Namco تحتفل.', cat:'official', source:'Bandai Namco' },
+        { title:'Nintendo تحقق 12 مليار دولار أرباح — Switch تقترب من 150 مليون', desc:'Nintendo سجّلت أعلى أرباح لها في التاريخ. Switch أصبحت ثاني أكثر ألعاب家用机 مبيعاً بعد PS2. ألعاب Mario باعت أكثر من 800 مليون نسخة.', cat:'official', source:'Nintendo' },
+
+        // أخبار تقنية وتطورات
+        { title:'Unreal Engine 6 يُكشف — يدعم محاكاة 100,000 شخصية في وقت واحد', desc:'Epic Games كشفت عن UE6 مع دعم ray tracing مسار كامل وأجواء واقعية 100%. المحرك يستخدم ذكاء اصطناعي لتوليد المحتوى تلقائياً.', cat:'official', source:'Epic Games' },
+        { title:' NVIDIA RTX 6090: أقوى بطاقة رسوميات في التاريخ — بسعر 2500$', desc:'NVIDIA أعلنت عن RTX 6090 مع 48GB VRAM وray tracing 10 أضعاف الأداء الحالي. البطاقة تُشغّل GTA VI على 8K بـ 60fps.', cat:'official', source:'NVIDIA' },
+        { title:' PlayStation 6: تفاصيل أولية — معالج AMD مخصص وذاكرة 32GB', desc:'مصادر تكشف أن PS6 ستستخدم معالج AMD مخصص ببنية Zen 6 مع ذاكرة GDDR7 بسعة 32GB. الإطلاق المتوقع 2028 بسعر 599$.', cat:'rumor', source:'Digital Foundry' },
+
+        // أخبار شركات وتعاونات
+        { title:'Microsoft تشتري Sega بـ 8 مليار دولار — Sonic و Yakuza لـ Xbox حصرياً', desc:'Microsoft أعلنت عن استحواذها على Sega. جميع ألعاب Sega المستقبلية ستكون حصرية لـ Game Pass. هذا أكبر استحواذ في صناعة الألعاب.', cat:'rumor', source:'Bloomberg' },
+        { title:' Sony و Nintendo يعلنان عن تعاون تاريخي — ألعاب متبادلة', desc:'Sony وNintendo أعلنتا عن شراكة تاريخية. ستدعم ألعاب Nintendo على PS5 قريباً. هذا تغيّر كبير في صناعة الألعاب.', cat:'rumor', source:'IGN' },
+        { title:'TikTok تشتري استوديو ألعاب بـ 2 مليار دولار', desc:'TikTok دخلت سوق الألعاب بشكل رسمي بشراء استوديو AAA. التطوير يشمل ألعاب هاتفية واقعية بجودة Console.', cat:'official', source:'GameSpot' },
+
+        // أخبار esports ومجتمع
+        { title:'بطولة العالم في League of Legends تسجل 6 مليون مشترك متزامن', desc:'نهائيات World Championship سجلت 6 مليون مشترك في نفس الوقت. الأعلى في تاريخEsports. الجائزة وصلت 5 مليون دولار.', cat:'official', source:'Riot Games' },
+        { title:' streamer شهير يُحضر بأكثر من 2 مليون مشترك في أول يوم', desc:'أحمد المسمار حطم أرقام Twitch بـ 2.3 مليون مشترك في أول بث مباشر. القيمة تجاوزت 500,000$ في donations.', cat:'official', source:'Twitch' },
+
+        // أخبار ألعاب قادمة
+        { title:'The Elder Scrolls VI: خريطة أكبر 4 أضعاف Skyrim مع عالم ديناميكي', desc:'Bethesda تكشف أن TES6 ستمتد على خريطة عملاقة. الطقس يتغير تلقائياً والقرى تتطور مع الوقت. الإطلاق 2027.', cat:'leak', source:'Insider Gaming' },
+        { title:'Call of Duty 2027: يعود للفترة التاريخية — الحرب العالمية الثانية', desc:'Activision تعود للحرب العالمية الثانية بـ COD 2027. المحرك الجديد يدعم 256 لاعباً في معركة واحدة.', cat:'rumor', source:'Charlie Intel' },
+        { title:'Red Dead Redemption 3: Rockstar تبدأ التطوير بشكل رسمي', desc:'Rockstar أعلنت عن RDR3. القصة تدور في فترة مختلفة تماماً — الغرب الأمريكي مع لمسة حديثة.', cat:'leak', source:'Insider Gaming' },
+        { title:'God of War 6: كريتوس في مصر — أولى التسريبات', desc:'Santa Monica Studio تعمل على God of War جديد في مصر القديمة. كريتوس يواجه ألوهية مصرية.', cat:'leak', source:'VGC' },
+        { title:'Zelda الجديدة على Switch 2: أصغر 3 أضعاف Breath of the Wild', desc:'Nintendo تكشف عن Zelda جديدة لـ Switch 2 بخريطة أصغر لكن أعمق. puzzles أكثر تعقيداً ونظام قتال محدث.', cat:'official', source:'Nintendo' },
+
+        // أخبار مزحة وإشاعات كذبية
+        { title:' leaking: Ubisoft تخطط لإطلاق Assassin\'s Creed في الفضاء', desc:'مصادر (غير مؤكدة) تدّعي أن Ubisoft تطور Assassin\'s Creed تدور أحداثها في الفضاء الخارجي. اللاعبون يشككون في صحة الخبر.', cat:'rumor', source:'Reddit' },
+        { title:' EA تخطط لإطلاق FIFA بدون microtransactions — الخبر كاذب حسب المحللين', desc:'تقرير يدّعي أن FIFA ستخلي من microtransactions. محللون يقولون هذا غير واقعي لأن EA تربح 1.5 مليار$/سنة من microtransactions.', cat:'rumor', source:'Eurogamer' },
+        { title:'Konami تعود لتطوير Metal Gear Solid 6 — أو ربما لا', desc:' Konami تلمح لعودة Metal Gear. لكن المطور Hideo Kojima ينفي أي عودة. المشجعون في حيرة من أمرهم.', cat:'rumor', source:'Game Informer' },
+        { title:' Bethesda تلغي The Elder Scrolls 6 بعد خلافات داخلية', desc:'خبر يدّعي إلغاء TES6 بسبب خلافات بين Bethesda و Microsoft. Bethesda نفت الخبر بشدة.', cat:'rumor', source:'Reddit' }
       ];
       return fb.map(n=>({...n, link:'#', image:fakeImages[Math.floor(Math.random()*fakeImages.length)], date:new Date(Date.now()-Math.random()*3600000*12).toISOString()}));
     }
