@@ -10,6 +10,11 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9391786789158568" crossorigin="anonymous"></script>
   <meta name="google-adsense-account" content="ca-pub-9391786789158568">
   <meta name="google-site-verification" content="JA5BAjqtLgOrc8FNdK48n84SgrNHUVP7Lz7K0QJ6nho">
+  <link rel="alternate" hreflang="ar" href="https://gamerbasset.github.io/gamingnews/">
+  <link rel="alternate" hreflang="en" href="https://gamerbasset.github.io/gamingnews/">
+  <link rel="alternate" hreflang="fr" href="https://gamerbasset.github.io/gamingnews/">
+  <link rel="alternate" hreflang="es" href="https://gamerbasset.github.io/gamingnews/">
+  <link rel="alternate" hreflang="de" href="https://gamerbasset.github.io/gamingnews/">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -419,6 +424,46 @@
     }
     .update-bar .countdown { color: #f43f5e; font-weight: 700; font-family: 'Orbitron', sans-serif; }
 
+    /* ===== LANGUAGE PANEL ===== */
+    .lang-btn {
+      width: 36px; height: 36px; border-radius: 10px; cursor: pointer;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #888;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .lang-btn::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+      border-radius: 10px 10px 0 0; pointer-events: none;
+    }
+    .lang-btn:hover { border-color: rgba(244,63,94,0.3); color: #f43f5e; background: rgba(244,63,94,0.06); }
+    .lang-panel {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999;
+      background: rgba(10,10,18,0.97); backdrop-filter: blur(20px);
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+    }
+    .lang-panel.open { display: flex; }
+    .lang-panel-close {
+      position: absolute; top: 20px; left: 20px; background: none; border: none;
+      color: #fff; font-size: 24px; cursor: pointer;
+    }
+    .lang-option {
+      padding: 14px 36px; border-radius: 14px; cursor: pointer;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      color: #aaa; font-size: 16px; font-weight: 700; font-family: 'Cairo', sans-serif;
+      transition: all 0.3s; min-width: 220px; text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .lang-option:hover {
+      background: rgba(244,63,94,0.08); border-color: rgba(244,63,94,0.2);
+      color: #f43f5e; transform: translateX(4px);
+    }
+    .lang-option.active {
+      background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3);
+      color: #f43f5e;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1100px) {
       .main-layout { grid-template-columns: 1fr; }
@@ -452,15 +497,16 @@
     <div class="container">
       <div class="logo">GAMEZONE</div>
       <nav>
-        <a href="#news" class="active">الأخبار</a>
-        <a href="#upcoming">قادمة</a>
-        <a href="#leaks">التسريبات</a>
+        <a href="#news" class="active" data-i18n="nav_news">الأخبار</a>
+        <a href="#upcoming" data-i18n="nav_upcoming">قادمة</a>
+        <a href="#leaks" data-i18n="nav_leaks">التسريبات</a>
       </nav>
       <div class="header-actions">
         <div class="refresh-info">
           <span class="dot"></span>
-          <span>التحديث: <span class="countdown" id="header-countdown">30:00</span></span>
+          <span data-i18n="update_in">التحديث: <span class="countdown" id="header-countdown">30:00</span></span>
         </div>
+        <button class="lang-btn" id="lang-btn"><i class="fas fa-globe"></i></button>
         <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
       </div>
     </div>
@@ -468,22 +514,31 @@
 
   <div class="mobile-nav" id="mobile-nav">
     <button class="mobile-nav-close" id="mobile-nav-close"><i class="fas fa-xmark"></i></button>
-    <a href="#news">الأخبار</a>
-    <a href="#upcoming">قادمة</a>
-    <a href="#leaks">التسريبات</a>
+    <a href="#news" data-i18n="nav_news">الأخبار</a>
+    <a href="#upcoming" data-i18n="nav_upcoming">قادمة</a>
+    <a href="#leaks" data-i18n="nav_leaks">التسريبات</a>
+  </div>
+
+  <div class="lang-panel" id="lang-panel">
+    <button class="lang-panel-close" id="lang-panel-close"><i class="fas fa-xmark"></i></button>
+    <button class="lang-option" data-lang="ar"><span>🇩🇿</span> العربية</button>
+    <button class="lang-option" data-lang="en"><span>🇺🇸</span> English</button>
+    <button class="lang-option" data-lang="fr"><span>🇫🇷</span> Français</button>
+    <button class="lang-option" data-lang="es"><span>🇪🇸</span> Español</button>
+    <button class="lang-option" data-lang="de"><span>🇩🇪</span> Deutsch</button>
   </div>
 
   <div class="main-layout container">
     <div class="content-area">
       <section class="hero">
         <div class="hero-content reveal">
-          <div class="hero-badge"><i class="fas fa-bolt"></i> أخبار مباشرة من عالم الألعاب</div>
-          <h1>آخر أخبار وأسرار<br>عالم الألعاب</h1>
-          <p>اخبار رسمية، تسريبات حصرية، ومراجعات — تحديث تلقائي كل 30 دقيقة</p>
+          <div class="hero-badge"><i class="fas fa-bolt"></i> <span data-i18n="hero_badge">أخبار مباشرة من عالم الألعاب</span></div>
+          <h1><span data-i18n="hero_title">آخر أخبار وأسرار<br>عالم الألعاب</span></h1>
+          <p><span data-i18n="hero_desc">اخبار رسمية، تسريبات حصرية، ومراجعات — تحديث تلقائي كل 30 دقيقة</span></p>
           <div class="hero-stats">
-            <div class="hero-stat"><div class="val" id="total-news">0</div><div class="label">خبر</div></div>
-            <div class="hero-stat"><div class="val">8</div><div class="label">مصدر</div></div>
-            <div class="hero-stat"><div class="val">30</div><div class="label">دقيقة</div></div>
+            <div class="hero-stat"><div class="val" id="total-news">0</div><div class="label" data-i18n="stat_news">خبر</div></div>
+            <div class="hero-stat"><div class="val">8</div><div class="label" data-i18n="stat_sources">مصدر</div></div>
+            <div class="hero-stat"><div class="val">30</div><div class="label" data-i18n="stat_minutes">دقيقة</div></div>
           </div>
         </div>
       </section>
@@ -495,16 +550,16 @@
 
       <section style="padding:30px 0 0" id="news">
         <div class="section-title reveal">
-          <h2><i class="fas fa-fire" style="color:#f43f5e"></i> آخر الأخبار</h2>
-          <p>أخبار الألعاب محدثة تلقائياً</p>
+          <h2><i class="fas fa-fire" style="color:#f43f5e"></i> <span data-i18n="latest_news">آخر الأخبار</span></h2>
+          <p data-i18n="news_subtitle">أخبار الألعاب محدثة تلقائياً</p>
         </div>
         <div class="categories reveal">
-          <button class="cat-btn active" data-cat="all">الكل</button>
-          <button class="cat-btn" data-cat="official">رسمي</button>
-          <button class="cat-btn" data-cat="leak">تسريبات</button>
-          <button class="cat-btn" data-cat="review">مراجعات</button>
-          <button class="cat-btn" data-cat="rumor">شائعات</button>
-          <button class="cat-btn" data-cat="update">تحديثات</button>
+          <button class="cat-btn active" data-cat="all" data-i18n="cat_all">الكل</button>
+          <button class="cat-btn" data-cat="official" data-i18n="cat_official">رسمي</button>
+          <button class="cat-btn" data-cat="leak" data-i18n="cat_leak">تسريبات</button>
+          <button class="cat-btn" data-cat="review" data-i18n="cat_review">مراجعات</button>
+          <button class="cat-btn" data-cat="rumor" data-i18n="cat_rumor">شائعات</button>
+          <button class="cat-btn" data-cat="update" data-i18n="cat_update">تحديثات</button>
         </div>
         <div id="news-container">
           <div class="loading"><div class="loading-spinner"></div><p>جاري تحميل الأخبار...</p></div>
@@ -518,8 +573,8 @@
 
       <section class="upcoming-section" id="upcoming">
         <div class="section-title reveal">
-          <h2><i class="fas fa-calendar" style="color:#f97316"></i> ألعاب قادمة</h2>
-          <p>أهم الألعاب المنتظرة</p>
+          <h2><i class="fas fa-calendar" style="color:#f97316"></i> <span data-i18n="upcoming_title">ألعاب قادمة</span></h2>
+          <p data-i18n="upcoming_subtitle">أهم الألعاب المنتظرة</p>
         </div>
         <div id="upcoming-container">
           <div class="loading"><div class="loading-spinner"></div><p>جاري التحميل...</p></div>
@@ -528,16 +583,16 @@
 
       <section class="cta-section">
         <div class="container reveal">
-          <h2>لا تفوّت أي خبر!</h2>
-          <p>الأخبار تتحدث تلقائياً كل 30 دقيقة</p>
-          <button class="cta-btn" onclick="fetchNews()"><i class="fas fa-refresh"></i> تحديث الآن</button>
+          <h2 data-i18n="cta_title">لا تفوّت أي خبر!</h2>
+          <p data-i18n="cta_desc">الأخبار تتحدث تلقائياً كل 30 دقيقة</p>
+          <button class="cta-btn" onclick="fetchNews()"><i class="fas fa-refresh"></i> <span data-i18n="cta_btn">تحديث الآن</span></button>
         </div>
       </section>
     </div>
 
     <aside class="sidebar">
       <div class="sidebar-card">
-        <h3><i class="fas fa-globe"></i> مواقع أخبار الألعاب</h3>
+        <h3><i class="fas fa-globe"></i> <span data-i18n="sidebar_sites">مواقع أخبار الألعاب</span></h3>
         <a href="https://www.ign.com" target="_blank" class="site-link site-ign">
           <div class="site-icon">IGN</div>
           <div class="site-info"><div class="site-name">IGN</div><div class="site-desc">أخبار ومراجعات شاملة</div></div>
@@ -573,7 +628,7 @@
       </div>
 
       <div class="sidebar-card">
-        <h3><i class="fas fa-fire"></i> الأكثر رواجاً</h3>
+        <h3><i class="fas fa-fire"></i> <span data-i18n="sidebar_trending">الأكثر رواجاً</span></h3>
         <div class="trending-item">
           <div class="trending-num">01</div>
           <div class="trending-text"><strong>GTA VI</strong> تسريبات جديدة عن تاريخ الإصدار</div>
@@ -597,7 +652,7 @@
       </div>
 
       <div class="sidebar-card">
-        <h3><i class="fas fa-hashtag"></i> المواضيع الشائعة</h3>
+        <h3><i class="fas fa-hashtag"></i> <span data-i18n="sidebar_tags">المواضيع الشائعة</span></h3>
         <div class="tags-cloud">
           <span class="tag-pill">#PS5</span>
           <span class="tag-pill">#Xbox</span>
@@ -634,17 +689,170 @@
         <a href="#"><i class="fab fa-discord"></i></a>
         <a href="#"><i class="fab fa-tiktok"></i></a>
       </div>
-      <p>© 2026 GAMEZONE — جميع الحقوق محفوظة</p>
+      <p data-i18n="footer_text">© 2026 GAMEZONE — جميع الحقوق محفوظة</p>
     </div>
   </footer>
 
   <div class="update-bar">
     <i class="fas fa-sync-alt" style="margin-left:4px"></i>
-    التحديث بعد: <span class="countdown" id="footer-countdown">30:00</span>
-    &nbsp;|&nbsp; آخر تحديث: <span id="last-update">—</span>
+    <span data-i18n="update_after">التحديث بعد:</span> <span class="countdown" id="footer-countdown">30:00</span>
+    &nbsp;|&nbsp; <span data-i18n="last_update">آخر تحديث:</span> <span id="last-update">—</span>
   </div>
 
   <script>
+    // ===== LANGUAGE SYSTEM =====
+    let currentLang = localStorage.getItem('gz-lang') || 'ar';
+    const langData = {
+      ar: {
+        nav_news:'الأخبار', nav_upcoming:'قادمة', nav_leaks:'التسريبات',
+        hero_badge:'أخبار مباشرة من عالم الألعاب', hero_title:'آخر أخبار وأسرار<br>عالم الألعاب', hero_desc:'اخبار رسمية، تسريبات حصرية، ومراجعات — تحديث تلقائي كل 30 دقيقة',
+        stat_news:'خبر', stat_sources:'مصدر', stat_minutes:'دقيقة',
+        latest_news:'آخر الأخبار', news_subtitle:'أخبار الألعاب محدثة تلقائياً',
+        cat_all:'الكل', cat_official:'رسمي', cat_leak:'تسريبات', cat_review:'مراجعات', cat_rumor:'شائعات', cat_update:'تحديثات',
+        upcoming_title:'ألعاب قادمة', upcoming_subtitle:'أهم الألعاب المنتظرة',
+        cta_title:'لا تفوّت أي خبر!', cta_desc:'الأخبار تتحدث تلقائياً كل 30 دقيقة', cta_btn:'تحديث الآن',
+        sidebar_sites:'مواقع أخبار الألعاب', sidebar_trending:'الأكثر رواجاً', sidebar_tags:'المواضيع الشائعة',
+        update_in:'التحديث:', update_after:'التحديث بعد:', last_update:'آخر تحديث:',
+        footer_text:'© 2026 GAMEZONE — جميع الحقوق محفوظة',
+        tag_official:'رسمي', tag_leak:'تسريب', tag_review:'مراجعة', tag_rumor:'شائعة', tag_update:'تحديث',
+        time_now:'الآن', time_min:'دقيقة', time_hour:'ساعة', time_day:'يوم',
+        toast_updated:'تم تحديث الأخبار!',
+        loading_news:'جاري تحميل الأخبار...',
+        no_news:'لا أخبار في هذا التصنيف',
+        loading_games:'جاري تحميل الألعاب...',
+        site_desc_ign:'أخبار ومراجعات شاملة', site_desc_gs:'أخبار وتقييمات الألعاب',
+        site_desc_k:'ثقافة الألعاب والأخبار', site_desc_pc:'أخبار ألعاب الكمبيوتر',
+        site_desc_p:'تحليل أعمق لعالم الألعاب', site_desc_eg:'أخبار ألعاب أوروبية',
+        site_desc_vgc:'تسريبات وأخبار حصرية', site_desc_ig:'تسريبات وشائعات موثوقة',
+        trend1:'تسريبات جديدة عن تاريخ الإصدار', trend2:'الإعلان الرسمي قريب',
+        trend3:'تفاصيل المعالج الجديد', trend4:'أولى لقطات اللعبة', trend5:'توسيع جديد مؤكد'
+      },
+      en: {
+        nav_news:'News', nav_upcoming:'Upcoming', nav_leaks:'Leaks',
+        hero_badge:'Live news from the gaming world', hero_title:'Latest Gaming News<br>& Secrets', hero_desc:'Official news, exclusive leaks, and reviews — auto-updated every 30 minutes',
+        stat_news:'Articles', stat_sources:'Sources', stat_minutes:'Minutes',
+        latest_news:'Latest News', news_subtitle:'Gaming news auto-updated',
+        cat_all:'All', cat_official:'Official', cat_leak:'Leaks', cat_review:'Reviews', cat_rumor:'Rumors', cat_update:'Updates',
+        upcoming_title:'Upcoming Games', upcoming_subtitle:'Most anticipated games',
+        cta_title:'Don\'t miss any news!', cta_desc:'News auto-updates every 30 minutes', cta_btn:'Update Now',
+        sidebar_sites:'Gaming News Sites', sidebar_trending:'Trending Now', sidebar_tags:'Popular Topics',
+        update_in:'Update:', update_after:'Next update:', last_update:'Last update:',
+        footer_text:'© 2026 GAMEZONE — All rights reserved',
+        tag_official:'Official', tag_leak:'Leak', tag_review:'Review', tag_rumor:'Rumor', tag_update:'Update',
+        time_now:'Now', time_min:'min', time_hour:'hour', time_day:'day',
+        toast_updated:'News updated!',
+        loading_news:'Loading news...',
+        no_news:'No news in this category',
+        loading_games:'Loading games...',
+        site_desc_ign:'Comprehensive news & reviews', site_desc_gs:'Game news & ratings',
+        site_desc_k:'Gaming culture & news', site_desc_pc:'PC gaming news',
+        site_desc_p:'Deeper gaming analysis', site_desc_eg:'European gaming news',
+        site_desc_vgc:'Exclusive leaks & news', site_desc_ig:'Reliable leaks & rumors',
+        trend1:'New release date leaks', trend2:'Official announcement soon',
+        trend3:'New processor details', trend4:'First gameplay footage', trend5:'New DLC confirmed'
+      },
+      fr: {
+        nav_news:'Actualités', nav_upcoming:'À venir', nav_leaks:'Fuites',
+        hero_badge:'Actualités en direct du monde du jeu', hero_title:'Dernières Actualités<br>& Secrets', hero_desc:'News officielles, fuites exclusives et critiques — mise à jour automatique toutes les 30 minutes',
+        stat_news:'Articles', stat_sources:'Sources', stat_minutes:'Minutes',
+        latest_news:'Dernières Actualités', news_subtitle:'Actualités gaming mises à jour',
+        cat_all:'Tout', cat_official:'Officiel', cat_leak:'Fuites', cat_review:'Critiques', cat_rumor:'Rumeurs', cat_update:'Mises à jour',
+        upcoming_title:'Jeux à Venir', upcoming_subtitle:'Les plus attendus',
+        cta_title:'Ne manquez aucune actu !', cta_desc:'Mise à jour automatique toutes les 30 minutes', cta_btn:'Mettre à jour',
+        sidebar_sites:'Sites d\'actus gaming', sidebar_trending:'Tendances', sidebar_tags:'Sujets Populaires',
+        update_in:'Mise à jour:', update_after:'Prochaine mise à jour:', last_update:'Dernière mise à jour:',
+        footer_text:'© 2026 GAMEZONE — Tous droits réservés',
+        tag_official:'Officiel', tag_leak:'Fuite', tag_review:'Critique', tag_rumor:'Rumeur', tag_update:'Mise à jour',
+        time_now:'Maintenant', time_min:'min', time_hour:'heure', time_day:'jour',
+        toast_updated:'Actualités mises à jour !',
+        loading_news:'Chargement des actualités...',
+        no_news:'Aucune actualité dans cette catégorie',
+        loading_games:'Chargement des jeux...',
+        site_desc_ign:'News et critiques complètes', site_desc_gs:'Actus et notes de jeux',
+        site_desc_k:'Culture gaming et actualités', site_desc_pc:'Actus PC gaming',
+        site_desc_p:'Analyse gaming approfondie', site_desc_eg:'Actus gaming européennes',
+        site_desc_vgc:'Fuites et news exclusives', site_desc_ig:'Fuites et rumeurs fiables',
+        trend1:'Nouvelles fuites sur la date', trend2:'Annonce officielle bientôt',
+        trend3:'Détails du nouveau processeur', trend4:'Premiers aperçus gameplay', trend5:'Nouveau DLC confirmé'
+      },
+      es: {
+        nav_news:'Noticias', nav_upcoming:'Próximamente', nav_leaks:'Filtraciones',
+        hero_badge:'Noticias en vivo del mundo gaming', hero_title:'Últimas Noticias<br>& Secretos', hero_desc:'Noticias oficiales, filtraciones exclusivas y reseñas — actualización automática cada 30 minutos',
+        stat_news:'Artículos', stat_sources:'Fuentes', stat_minutes:'Minutos',
+        latest_news:'Últimas Noticias', news_subtitle:'Noticias gaming actualizadas',
+        cat_all:'Todo', cat_official:'Oficial', cat_leak:'Filtraciones', cat_review:'Reseñas', cat_rumor:'Rumores', cat_update:'Actualizaciones',
+        upcoming_title:'Juegos Próximos', upcoming_subtitle:'Los más esperados',
+        cta_title:'¡No te pierdas nada!', cta_desc:'Actualización automática cada 30 minutos', cta_btn:'Actualizar ahora',
+        sidebar_sites:'Sitios de noticias', sidebar_trending:'Tendencias', sidebar_tags:'Temas Populares',
+        update_in:'Actualización:', update_after:'Próxima actualización:', last_update:'Última actualización:',
+        footer_text:'© 2026 GAMEZONE — Todos los derechos reservados',
+        tag_official:'Oficial', tag_leak:'Filtración', tag_review:'Reseña', tag_rumor:'Rumor', tag_update:'Actualización',
+        time_now:'Ahora', time_min:'min', time_hour:'hora', time_day:'día',
+        toast_updated:'¡Noticias actualizadas!',
+        loading_news:'Cargando noticias...',
+        no_news:'No hay noticias en esta categoría',
+        loading_games:'Cargando juegos...',
+        site_desc_ign:'Noticias y reseñas completas', site_desc_gs:'Noticias y calificaciones',
+        site_desc_k:'Cultura gaming y noticias', site_desc_pc:'Noticias PC gaming',
+        site_desc_p:'Análisis gaming profundo', site_desc_eg:'Noticias gaming europeas',
+        site_desc_vgc:'Filtraciones exclusivas', site_desc_ig:'Filtraciones fiables',
+        trend1:'Nuevas filtraciones de fecha', trend2:'Anuncio oficial pronto',
+        trend3:'Detalles del nuevo procesador', trend4:'Primeras imágenes de gameplay', trend5:'Nuevo DLC confirmado'
+      },
+      de: {
+        nav_news:'News', nav_upcoming:'Demnächst', nav_leaks:'Leaks',
+        hero_badge:'Live-News aus der Gaming-Welt', hero_title:'Aktuelle Gaming News<br>& Geheimnisse', hero_desc:'Offizielle News, exklusiveLeaks und Reviews — automatisch alle 30 Minuten aktualisiert',
+        stat_news:'Artikel', stat_sources:'Quellen', stat_minutes:'Minuten',
+        latest_news:'Neueste News', news_subtitle:'Gaming News automatisch aktualisiert',
+        cat_all:'Alle', cat_official:'Offiziell', cat_leak:'Leaks', cat_review:'Reviews', cat_rumor:'Gerüchte', cat_update:'Updates',
+        upcoming_title:'Demnächst', upcoming_subtitle:'Die meisterwarteten Spiele',
+        cta_title:'Verpasse keine News!', cta_desc:'Automatische Aktualisierung alle 30 Minuten', cta_btn:'Jetzt aktualisieren',
+        sidebar_sites:'Gaming News Seiten', sidebar_trending:'Im Trend', sidebar_tags:'Beliebte Themen',
+        update_in:'Update:', update_after:'Nächstes Update:', last_update:'Letztes Update:',
+        footer_text:'© 2026 GAMEZONE — Alle Rechte vorbehalten',
+        tag_official:'Offiziell', tag_leak:'Leak', tag_review:'Review', tag_rumor:'Gerücht', tag_update:'Update',
+        time_now:'Jetzt', time_min:'Min', time_hour:'Stunde', time_day:'Tag',
+        toast_updated:'News aktualisiert!',
+        loading_news:'News werden geladen...',
+        no_news:'Keine News in dieser Kategorie',
+        loading_games:'Spiele werden geladen...',
+        site_desc_ign:'Umfassende News & Reviews', site_desc_gs:'Spielnews & Bewertungen',
+        site_desc_k:'Gaming-Kultur & News', site_desc_pc:'PC-Gaming News',
+        site_desc_p:'Tiefere Gaming-Analyse', site_desc_eg:'Europäische Gaming News',
+        site_desc_vgc:'ExklusiveLeaks & News', site_desc_ig:'ZuverlässigeLeaks & Gerüchte',
+        trend1:'Neue Release-Datum Leaks', trend2:'Offizielle Ankündigung bald',
+        trend3:'Neue Prozessor-Details', trend4:'Erste Gameplay-Aufnahmen', trend5:'Neues DLC bestätigt'
+      }
+    };
+
+    function loadLang(code) {
+      currentLang = code;
+      localStorage.setItem('gz-lang', code);
+      const d = langData[code] || langData.ar;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (d[key]) el.innerHTML = d[key];
+      });
+      document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.lang === code));
+      document.documentElement.lang = code;
+      document.documentElement.dir = (code === 'ar') ? 'rtl' : 'ltr';
+      renderNews();
+      renderUpcoming();
+    }
+
+    document.getElementById('lang-btn').addEventListener('click', () => {
+      document.getElementById('lang-panel').classList.add('open');
+    });
+    document.getElementById('lang-panel-close').addEventListener('click', () => {
+      document.getElementById('lang-panel').classList.remove('open');
+    });
+    document.querySelectorAll('.lang-option').forEach(o => {
+      o.addEventListener('click', () => {
+        loadLang(o.dataset.lang);
+        document.getElementById('lang-panel').classList.remove('open');
+      });
+    });
+
     const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
     const feeds = [
       { url: 'https://feeds.feedburner.com/ign/games-all', source: 'IGN' },
@@ -682,16 +890,18 @@
       return 'official';
     }
     function getTagHTML(c) {
-      const m = { official:{c:'tag-official',l:'رسمي'}, leak:{c:'tag-leak',l:'تسريب'}, review:{c:'tag-review',l:'مراجعة'}, rumor:{c:'tag-rumor',l:'شائعة'}, update:{c:'tag-update',l:'تحديث'} };
+      const d = langData[currentLang] || langData.ar;
+      const m = { official:{c:'tag-official',k:'tag_official'}, leak:{c:'tag-leak',k:'tag_leak'}, review:{c:'tag-review',k:'tag_review'}, rumor:{c:'tag-rumor',k:'tag_rumor'}, update:{c:'tag-update',k:'tag_update'} };
       const t = m[c]||m.official;
-      return `<span class="news-tag ${t.c}">${t.l}</span>`;
+      return `<span class="news-tag ${t.c}">${d[t.k]||'Official'}</span>`;
     }
     function timeAgo(d) {
       const s = Math.floor((new Date()-new Date(d))/1000);
-      if (s<60) return 'الآن';
-      if (s<3600) return Math.floor(s/60)+' دقيقة';
-      if (s<86400) return Math.floor(s/3600)+' ساعة';
-      return Math.floor(s/86400)+' يوم';
+      const l = langData[currentLang] || langData.ar;
+      if (s<60) return l.time_now;
+      if (s<3600) return Math.floor(s/60)+' '+l.time_min;
+      if (s<86400) return Math.floor(s/3600)+' '+l.time_hour;
+      return Math.floor(s/86400)+' '+l.time_day;
     }
     function stripHTML(h) { const t=document.createElement('div'); t.innerHTML=h||''; return t.textContent||''; }
     function getImage(item,i) {
@@ -703,7 +913,7 @@
     function renderNews() {
       const c = document.getElementById('news-container');
       let f = currentCat==='all' ? allNews : allNews.filter(n=>n.cat===currentCat);
-      if (!f.length) { c.innerHTML='<div class="loading"><p>لا أخبار في هذا التصنيف</p></div>'; return; }
+      if (!f.length) { const l=langData[currentLang]||langData.ar; c.innerHTML=`<div class="loading"><p>${l.no_news}</p></div>`; return; }
       let h = '<div class="news-grid">';
       f.forEach((n,i) => {
         const feat = i===0 && currentCat==='all';
@@ -766,7 +976,8 @@
       if (!allNews.length) allNews = genFallback();
       renderNews();
       document.getElementById('last-update').textContent = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
-      showToast('تم تحديث الأخبار!');
+      const l = langData[currentLang] || langData.ar;
+      showToast(l.toast_updated);
     }
 
     function genFallback() {
@@ -869,6 +1080,7 @@
     animateParticles();
 
     initReveal(); fetchNews(); startCountdown();
+    loadLang(currentLang);
   </script>
 </body>
 </html>
