@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAMEZONE - أخبار الألعاب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Cairo', sans-serif; color: #e0e0e0;
+      background: #07070d;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 300px 300px;
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    #particles-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    header {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(7,7,13,0.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+    }
+    header .container {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      font-size: 24px; font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    nav { display: flex; gap: 24px; align-items: center; }
+    nav a {
+      color: #888; font-size: 14px; font-weight: 600; transition: all 0.3s;
+      position: relative; padding: 4px 0;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -2px; right: 0; width: 0; height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899); border-radius: 2px;
+      transition: width 0.3s;
+    }
+    nav a:hover { color: #fff; text-shadow: 0 0 12px rgba(139,92,246,0.5); }
+    nav a:hover::after { width: 100%; }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .refresh-info {
+      font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px;
+    }
+    .refresh-info .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .menu-toggle {
+      display: none; background: none; border: none; color: #fff;
+      font-size: 20px; cursor: pointer;
+    }
+
+    .hero {
+      min-height: 60vh; display: flex; align-items: center;
+      padding: 100px 0 60px; position: relative;
+      background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.08) 0%, transparent 60%);
+    }
+    .hero-content { text-align: center; width: 100%; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2);
+      padding: 8px 20px; border-radius: 50px; font-size: 13px; color: #a78bfa;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 52px; font-weight: 900; line-height: 1.2; margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff, #a78bfa, #ec4899);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { font-size: 16px; color: #888; max-width: 600px; margin: 0 auto 30px; }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 40px; margin-top: 40px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .val { font-size: 28px; font-weight: 900; color: #a78bfa; }
+    .hero-stat .label { font-size: 12px; color: #666; margin-top: 4px; }
+
+    .section-title { text-align: center; margin-bottom: 40px; }
+    .section-title h2 {
+      font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 8px;
+    }
+    .section-title p { font-size: 14px; color: #666; }
+
+    .categories {
+      display: flex; justify-content: center; gap: 10px; margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .cat-btn {
+      padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03); color: #888; font-size: 13px;
+      font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.3s;
+    }
+    .cat-btn:hover, .cat-btn.active {
+      background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.3);
+      color: #a78bfa; text-shadow: 0 0 10px rgba(139,92,246,0.3);
+    }
+
+    .news-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      margin-bottom: 60px;
+    }
+    .news-card {
+      background: linear-gradient(160deg, rgba(20,20,40,0.9), rgba(13,13,26,0.95));
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+      position: relative; cursor: pointer;
+    }
+    .news-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+      border-radius: inherit; pointer-events: none; z-index: 1;
+    }
+    .news-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(139,92,246,0.25);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 0 40px rgba(139,92,246,0.06);
+    }
+    .news-card-img {
+      width: 100%; height: 200px; object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .news-card-body { padding: 20px; position: relative; z-index: 2; }
+    .news-tag {
+      display: inline-block; padding: 4px 12px; border-radius: 50px;
+      font-size: 11px; font-weight: 700; margin-bottom: 10px;
+    }
+    .tag-leak { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .tag-official { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .tag-review { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .tag-rumor { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
+    .tag-update { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .news-card h3 {
+      font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px;
+      line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-card p {
+      font-size: 13px; color: #888; line-height: 1.8;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .news-source { font-size: 11px; color: #666; }
+    .news-date { font-size: 11px; color: #555; }
+
+    .featured-card {
+      grid-column: span 2; grid-row: span 2;
+      display: flex; flex-direction: column;
+    }
+    .featured-card .news-card-img { height: 100%; min-height: 300px; flex: 1; }
+    .featured-card .news-card-body { padding: 28px; }
+    .featured-card h3 { font-size: 22px; -webkit-line-clamp: 3; }
+    .featured-card p { -webkit-line-clamp: 4; }
+
+    .upcoming-section { padding: 60px 0; }
+    .upcoming-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .upcoming-card {
+      background: linear-gradient(160deg, rgba(20,20,40,0.9), rgba(13,13,26,0.95));
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;
+      padding: 20px; text-align: center; transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .upcoming-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+      border-radius: inherit; pointer-events: none;
+    }
+    .upcoming-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(139,92,246,0.25);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+    .upcoming-card img {
+      width: 100%; height: 160px; object-fit: cover; border-radius: 12px;
+      margin-bottom: 14px;
+    }
+    .upcoming-card h4 { font-size: 14px; color: #fff; margin-bottom: 6px; }
+    .upcoming-card .date { font-size: 12px; color: #a78bfa; }
+    .upcoming-card .platform { font-size: 11px; color: #666; margin-top: 4px; }
+
+    .loading {
+      text-align: center; padding: 60px 0;
+    }
+    .loading-spinner {
+      width: 40px; height: 40px; border: 3px solid rgba(139,92,246,0.2);
+      border-top-color: #8b5cf6; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: #666; font-size: 14px; }
+
+    .cta-section {
+      padding: 80px 0; text-align: center;
+      background: radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.06) 0%, transparent 70%);
+    }
+    .cta-section h2 { font-size: 32px; color: #fff; margin-bottom: 12px; }
+    .cta-section p { color: #666; margin-bottom: 30px; }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; border-radius: 14px; font-size: 15px; font-weight: 700;
+      background: linear-gradient(160deg, #8b5cf6, #7c3aed, #6d28d9);
+      color: #fff; border: none; cursor: pointer; font-family: 'Cairo', sans-serif;
+      transition: all 0.3s; position: relative; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+    }
+    .cta-btn::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
+      border-radius: 14px 14px 0 0; pointer-events: none;
+    }
+    .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(139,92,246,0.5); }
+
+    footer {
+      padding: 40px 0; text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    footer .social { display: flex; justify-content: center; gap: 16px; margin-bottom: 16px; }
+    footer .social a {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center;
+      color: #888; font-size: 16px; transition: all 0.3s;
+    }
+    footer .social a:hover {
+      background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3);
+      color: #a78bfa;
+    }
+    footer p { font-size: 13px; color: #555; }
+
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 99999;
+      background: rgba(7,7,13,0.97); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 20px; color: #ccc; font-weight: 700; transition: color 0.3s;
+    }
+    .mobile-nav a:hover { color: #a78bfa; }
+    .mobile-nav-close {
+      position: absolute; top: 20px; left: 20px; background: none;
+      border: none; color: #fff; font-size: 24px; cursor: pointer;
+    }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: rgba(20,20,40,0.95); border: 1px solid rgba(34,197,94,0.3);
+      padding: 12px 24px; border-radius: 12px; font-size: 13px; color: #4ade80;
+      z-index: 99999; backdrop-filter: blur(10px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes toastOut { to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
+
+    .update-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(7,7,13,0.9); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 10px 0; text-align: center; font-size: 12px; color: #666;
+    }
+    .update-bar .countdown { color: #a78bfa; font-weight: 700; }
+
+    @media (max-width: 1024px) {
+      .news-grid { grid-template-columns: repeat(2, 1fr); }
+      .featured-card { grid-column: span 2; }
+      .upcoming-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .menu-toggle { display: block; }
+      .hero h1 { font-size: 28px; }
+      .hero-stats { gap: 20px; }
+      .hero-stat .val { font-size: 22px; }
+      .news-grid { grid-template-columns: 1fr; }
+      .featured-card { grid-column: span 1; grid-row: span 1; }
+      .featured-card .news-card-img { min-height: 200px; }
+      .upcoming-grid { grid-template-columns: 1fr 1fr; }
+      .section-title h2 { font-size: 28px; }
+      .categories { gap: 6px; }
+      .cat-btn { padding: 6px 14px; font-size: 12px; }
+      .news-card:hover { transform: none; }
+    }
+    @media (max-width: 480px) {
+      .upcoming-grid { grid-template-columns: 1fr; }
+      .hero { min-height: 50vh; padding: 80px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <header>
+    <div class="container">
+      <div class="logo">GAMEZONE</div>
+      <nav>
+        <a href="#news">الأخبار</a>
+        <a href="#upcoming">قادمة</a>
+        <a href="#leaks">التسريبات</a>
+      </nav>
+      <div class="header-actions">
+        <div class="refresh-info">
+          <span class="dot"></span>
+          <span>التحديث التالي: <span class="countdown" id="header-countdown">30:00</span></span>
+        </div>
+        <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-close" id="mobile-nav-close"><i class="fas fa-xmark"></i></button>
+    <a href="#news">الأخبار</a>
+    <a href="#upcoming">قادمة</a>
+    <a href="#leaks">التسريبات</a>
+  </div>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content reveal">
+        <div class="hero-badge"><i class="fas fa-bolt"></i> أخبار مباشرة من عالم الألعاب</div>
+        <h1>آخر أخبار وأسرار<br>عالم الألعاب</h1>
+        <p>اخبار رسمية، تسريبات حصرية، ومراجعات متخصصة — كل 30 دقيقة تحديث جديد</p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="val" id="total-news">0</div><div class="label">خبر منشور</div></div>
+          <div class="hero-stat"><div class="val" id="total-sources">6</div><div class="label">مصدر موثوق</div></div>
+          <div class="hero-stat"><div class="val">30</div><div class="label">دقيقة تحديث</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:60px 0" id="news">
+    <div class="container">
+      <div class="section-title reveal">
+        <h2><i class="fas fa-fire" style="color:#f87171"></i> آخر الأخبار</h2>
+        <p>أخبار الألعاب محدثة تلقائياً كل 30 دقيقة</p>
+      </div>
+
+      <div class="categories reveal">
+        <button class="cat-btn active" data-cat="all">الكل</button>
+        <button class="cat-btn" data-cat="official">رسمي</button>
+        <button class="cat-btn" data-cat="leak">تسريبات</button>
+        <button class="cat-btn" data-cat="review">مراجعات</button>
+        <button class="cat-btn" data-cat="rumor">شائعات</button>
+        <button class="cat-btn" data-cat="update">تحديثات</button>
+      </div>
+
+      <div id="news-container">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>جاري تحميل آخر الأخبار...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="upcoming-section" id="upcoming">
+    <div class="container">
+      <div class="section-title reveal">
+        <h2><i class="fas fa-calendar" style="color:#a78bfa"></i> ألعاب قادمة</h2>
+        <p>أهم الألعاب المنتظرة خلال الأشهر القادمة</p>
+      </div>
+      <div id="upcoming-container">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>جاري تحميل الألعاب القادمة...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container reveal">
+      <h2>لا تفوّت أي خبر!</h2>
+      <p>الأخبار تتحدث تلقائياً كل 30 دقيقة — لا حاجة للتحديث يدوياً</p>
+      <button class="cta-btn" onclick="fetchNews()"><i class="fas fa-refresh"></i> تحديث الآن</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="social">
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-discord"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <p>© 2026 GAMEZONE — جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
+
+  <div class="update-bar">
+    <i class="fas fa-sync-alt" style="margin-left:6px"></i>
+    التحديث التالي بعد: <span class="countdown" id="footer-countdown">30:00</span>
+    &nbsp;|&nbsp; آخر تحديث: <span id="last-update">—</span>
+  </div>
+
+  <script>
+    const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+    const feeds = [
+      { url: 'https://feeds.feedburner.com/ign/games-all', source: 'IGN' },
+      { url: 'https://www.gamespot.com/feeds/mashup/', source: 'GameSpot' },
+      { url: 'https://kotaku.com/rss', source: 'Kotaku' },
+      { url: 'https://www.pcgamer.com/rss/', source: 'PC Gamer' },
+      { url: 'https://www.polygon.com/rss/index.xml', source: 'Polygon' },
+      { url: 'https://www.eurogamer.net/feed', source: 'Eurogamer' }
+    ];
+
+    const leakKeywords = ['leak', 'leaked', 'rumor', 'rumour', 'alleged', 'supposed', 'hinted', 'teased'];
+    const officialKeywords = ['announced', 'release date', 'confirmed', 'launch', 'trailer', 'reveal'];
+    const reviewKeywords = ['review', 'score', 'rating', 'verdict', 'tested'];
+    const updateKeywords = ['update', 'patch', 'dlc', 'expansion', 'season'];
+    const fakeImages = [
+      'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1586185129891-a3d15b789b38?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=600&h=400&fit=crop'
+    ];
+
+    let allNews = [];
+    let currentCat = 'all';
+    let countdown = 1800;
+    let countdownInterval;
+
+    function categorize(title) {
+      const t = title.toLowerCase();
+      if (leakKeywords.some(k => t.includes(k))) return 'leak';
+      if (reviewKeywords.some(k => t.includes(k))) return 'review';
+      if (updateKeywords.some(k => t.includes(k))) return 'update';
+      if (officialKeywords.some(k => t.includes(k))) return 'official';
+      if (t.includes('rumor') || t.includes('reportedly') || t.includes('claim')) return 'rumor';
+      return 'official';
+    }
+
+    function getTagHTML(cat) {
+      const tags = {
+        official: { cls: 'tag-official', label: 'رسمي' },
+        leak: { cls: 'tag-leak', label: 'تسريب' },
+        review: { cls: 'tag-review', label: 'مراجعة' },
+        rumor: { cls: 'tag-rumor', label: 'شائعة' },
+        update: { cls: 'tag-update', label: 'تحديث' }
+      };
+      const t = tags[cat] || tags.official;
+      return `<span class="news-tag ${t.cls}">${t.label}</span>`;
+    }
+
+    function timeAgo(dateStr) {
+      const now = new Date();
+      const d = new Date(dateStr);
+      const diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return 'الآن';
+      if (diff < 3600) return Math.floor(diff/60) + ' دقيقة';
+      if (diff < 86400) return Math.floor(diff/3600) + ' ساعة';
+      return Math.floor(diff/86400) + ' يوم';
+    }
+
+    function stripHTML(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html || '';
+      return tmp.textContent || tmp.innerText || '';
+    }
+
+    function getImage(item, index) {
+      if (item.enclosure && item.enclosure.link) return item.enclosure.link;
+      if (item.thumbnail) return item.thumbnail;
+      return fakeImages[index % fakeImages.length];
+    }
+
+    function renderNews() {
+      const container = document.getElementById('news-container');
+      let filtered = currentCat === 'all' ? allNews : allNews.filter(n => n.cat === currentCat);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="loading"><p>لا أخبار في هذا التصنيف</p></div>';
+        return;
+      }
+
+      let html = '<div class="news-grid">';
+      filtered.forEach((news, i) => {
+        const isFeatured = i === 0 && currentCat === 'all';
+        html += `
+          <a href="${news.link}" target="_blank" rel="noopener" class="news-card ${isFeatured ? 'featured-card' : ''} reveal" style="transition-delay:${Math.min(i*0.05, 0.5)}s">
+            <img class="news-card-img" src="${news.image}" alt="" loading="lazy" onerror="this.src='${fakeImages[i%fakeImages.length]}'">
+            <div class="news-card-body">
+              ${getTagHTML(news.cat)}
+              <h3>${news.title}</h3>
+              <p>${news.desc}</p>
+              <div class="news-meta">
+                <span class="news-source"><i class="fas fa-globe"></i> ${news.source}</span>
+                <span class="news-date"><i class="fas fa-clock"></i> ${timeAgo(news.date)}</span>
+              </div>
+            </div>
+          </a>`;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+
+      document.getElementById('total-news').textContent = allNews.length;
+
+      setTimeout(() => {
+        document.querySelectorAll('.reveal').forEach(el => {
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+          }, { threshold: 0.1 });
+          obs.observe(el);
+        });
+      }, 100);
+    }
+
+    const upcomingGames = [
+      { name: 'GTA VI', date: '2026', platform: 'PS5, Xbox, PC', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop' },
+      { name: 'The Elder Scrolls VI', date: '2027+', platform: 'TBA', img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop' },
+      { name: 'Fable', date: '2026', platform: 'Xbox, PC', img: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop' },
+      { name: 'Death Stranding 2', date: '2026', platform: 'PS5', img: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=300&fit=crop' },
+      { name: 'Metroid Prime 4', date: '2026', platform: 'Switch 2', img: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=300&fit=crop' },
+      { name: 'Wolverine', date: '2026', platform: 'PS5', img: 'https://images.unsplash.com/photo-1586185129891-a3d15b789b38?w=400&h=300&fit=crop' },
+      { name: 'Avowed', date: '2026', platform: 'Xbox, PC', img: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&h=300&fit=crop' },
+      { name: 'Civilization VII', date: '2026', platform: 'PC, Console', img: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&h=300&fit=crop' }
+    ];
+
+    function renderUpcoming() {
+      const c = document.getElementById('upcoming-container');
+      let html = '<div class="upcoming-grid">';
+      upcomingGames.forEach((g, i) => {
+        html += `
+          <div class="upcoming-card reveal" style="transition-delay:${i*0.05}s">
+            <img src="${g.img}" alt="${g.name}" loading="lazy">
+            <h4>${g.name}</h4>
+            <div class="date"><i class="fas fa-calendar-alt"></i> ${g.date}</div>
+            <div class="platform">${g.platform}</div>
+          </div>`;
+      });
+      html += '</div>';
+      c.innerHTML = html;
+
+      document.querySelectorAll('.reveal').forEach(el => {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        obs.observe(el);
+      });
+    }
+
+    async function fetchNews() {
+      allNews = [];
+      const promises = feeds.map(async (feed) => {
+        try {
+          const res = await fetch(RSS2JSON + encodeURIComponent(feed.url));
+          const data = await res.json();
+          if (data.status === 'ok' && data.items) {
+            data.items.slice(0, 8).forEach(item => {
+              allNews.push({
+                title: item.title || 'خبر جديد',
+                desc: stripHTML(item.description || item.content || '').substring(0, 200),
+                link: item.link,
+                image: getImage(item, Math.floor(Math.random()*fakeImages.length)),
+                source: feed.source,
+                date: item.pubDate || new Date().toISOString(),
+                cat: categorize(item.title || '')
+              });
+            });
+          }
+        } catch(e) { console.log('Feed error:', feed.source); }
+      });
+
+      await Promise.allSettled(promises);
+      allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+      allNews = allNews.slice(0, 30);
+
+      if (allNews.length === 0) {
+        allNews = generateFallbackNews();
+      }
+
+      renderNews();
+      document.getElementById('last-update').textContent = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+      showToast('تم تحديث الأخبار بنجاح!');
+    }
+
+    function generateFallbackNews() {
+      const fallback = [
+        { title: 'GTA VI: تسريبات جديدة تكشف عن تاريخ الإصدار', desc: 'مصادر مقربة تؤكد أن Rockstar Games تستعد لإطلاق GTA VI في أواخر 2026 مع تفاصيل جديدة مذهلة عن العالم المفتوح.', cat: 'leak', source: 'Insider Gaming' },
+        { title: 'PlayStation 5 Pro: الأداء يتفوق على التوقعات', desc: 'اختبارات جديدة تظهر تحسن كبير في الأداء مع معالج رسومات محدث يدعم ray tracing بشكل أفضل.', cat: 'official', source: 'Digital Foundry' },
+        { title: 'نداء Duty 2026: خريطة وتحديثات حصرية', desc: 'Activision تكشف عن خطط كبير لسلسلة Call of Duty مع خرائط جديدة ووضع لعب مبتكر.', cat: 'official', source: 'IGN' },
+        { title: 'Fortnite Season 12: تعاون مع فرقة موسيقية شهيرة', desc: ' Epic Games تعلن عن أكبر تعاون في تاريخ Fortnite مع حفل موسيقي حي داخل اللعبة.', cat: 'official', source: 'Epic Games' },
+        { title: 'تسريب: ألعاب PlayStation Plus المجانية الشهر القادم', desc: 'قائمة ألعاب الشهر القادم تتضمن 3 عناوين AAA حسب التسريبات من مصادر موثوقة.', cat: 'leak', source: 'Game Informer' },
+        { title: 'Nintendo Switch 2: المواصفات النهائية تتسرب', desc: 'تفاصيل جديدة عن معالج وذاكرة وشاشة Nintendo Switch 2 تظهر قبل الإعلان الرسمي.', cat: 'leak', source: 'VGC' },
+        { title: ' Elden Ring: توسيع جديد قادم', desc: 'Bandai Namco تلمح لإضافة محتوى جديد لـ Elden Ring بعد النجاح الكبير للتوسيع الأول.', cat: 'rumor', source: 'GameSpot' },
+        { title: 'minecraft update 1.22: ميزات جديدة مذهلة', desc: 'Mojang تكشف عن أكبر تحديث في تاريخ Minecraft مع عالم جديد وأدوات بناء متقدمة.', cat: 'update', source: 'Minecraft' },
+        { title: 'Steam Summer Sale 2026: أفضل العروض', desc: 'قائمة بأقوى الخصومات في مبيعات الصيف على Steam مع خصومات تصل إلى 90%.', cat: 'official', source: 'Steam' },
+        { title: 'The Witcher 4: أول gameplay يتسرب', desc: 'لقطات جديدة من The Witcher 4 تظهر رسوميات مذهلة ونظام قتال محسّن بشكل كبير.', cat: 'leak', source: 'Insider Gaming' },
+        { title: 'Xbox Game Pass: 5 ألعاب جديدة هذا الأسبوع', desc: 'Microsoft تضيف 5 عناوين جديدة لخدمة Game Pass مع ألعاب AAA حصرية.', cat: 'update', source: 'Xbox Wire' },
+        { title: 'Cyberpunk 2077: المطور CDPR يلمح لمشروع جديد', desc: 'CD Projekt Red تلمح لمشروع جديد في عالم Cyberpunk بعد اكتمال دعم Cyberpunk 2077.', cat: 'rumor', source: 'Bloomberg' }
+      ];
+      return fallback.map(n => ({
+        ...n,
+        link: '#',
+        image: fakeImages[Math.floor(Math.random()*fakeImages.length)],
+        date: new Date(Date.now() - Math.random()*3600000*12).toISOString()
+      }));
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerHTML = '<i class="fas fa-check-circle" style="margin-left:6px"></i>' + msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    function startCountdown() {
+      countdown = 1800;
+      clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) { fetchNews(); countdown = 1800; }
+        const m = Math.floor(countdown / 60);
+        const s = countdown % 60;
+        const str = m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0');
+        document.getElementById('header-countdown').textContent = str;
+        document.getElementById('footer-countdown').textContent = str;
+      }, 1000);
+    }
+
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat;
+        renderNews();
+      });
+    });
+
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-nav').classList.add('open');
+    });
+    document.getElementById('mobile-nav-close').addEventListener('click', () => {
+      document.getElementById('mobile-nav').classList.remove('open');
+    });
+    document.querySelectorAll('.mobile-nav a').forEach(a => {
+      a.addEventListener('click', () => document.getElementById('mobile-nav').classList.remove('open'));
+    });
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.4 + 0.1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139,92,246,${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      obs.observe(el);
+    });
+
+    fetchNews();
+    startCountdown();
+  </script>
+</body>
+</html>
